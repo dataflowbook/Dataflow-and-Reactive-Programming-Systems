@@ -10,6 +10,7 @@ import DataflowBook.SDF.Schedule.Topo
 import DataflowBook.SDF.Schedule.InstantState
 import DataflowBook.SDF.Schedule.AnalysisResult
 import DataflowBook.SDF.Schedule.Graph
+import qualified DataflowBook.SDF.SystemOfEquations.FireCountEq as Equation
 
 import Data.Array.IArray
 import Debug.Trace
@@ -72,6 +73,8 @@ sizeMaxOfAbs topo a =
     where
         nodeCount = nodebounds topo
 
+givenArcCapacity :: Int -> Topo -> ArcIndex -> Int
+givenArcCapacity capacity _ _ = capacity
 
 --------------
 -- Activation
@@ -302,6 +305,33 @@ findPeriod' history pattern_size =
                 findPeriod' (drop 1 history) pattern_size
         else
             ([],[])
+
+-----------------------
+-- System of Equations
+-----------------------
+
+buildEquations :: Topo -> [Equation.T]
+buildEquations topo = 
+    let
+        firstIdx = firstIdx
+        nodeCount = nodebounds topo
+        arcCount = arcbounds topo
+        
+        mk_equations n1 n2 a = 
+            [ Equation.unsolved n1 (n2 , abs ( fromIntegral(topo!(n2,a)) / fromIntegral(topo!(n1,a))) )
+            , Equation.unsolved n2 (n1 , abs ( fromIntegral(topo!(n1,a)) / fromIntegral(topo!(n2,a))) )
+            ]
+    in
+        concat
+        [ eqs
+        | n1 <- [firstIdx .. nodeCount]
+        , a <- [firstIdx .. arcCount]
+        , topo!(n1,a) /= 0
+        , n2 <- [n1+1 .. nodeCount] 
+        , topo!(n2,a) /= 0 
+        , let eqs = mk_equations n1 n2 a
+        ]
+
 
 -------------------------------------------
 -- Simulation Activation Vector Strategies
