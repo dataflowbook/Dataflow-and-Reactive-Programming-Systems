@@ -5,11 +5,6 @@ module DataflowBook.ADF.Dataflow.Token
 (T
 ,mk,new
 ,getVal ,getPort ,getNode ,setNodeAndPort
---,localToGlobal ,globalToLocal
---,removeTopMost, removeAllTopMost
---,pushBottom, pushAllBottom
---,removeFirst, removeAll
---,matchingNode, matchingNodePort, firstMatchingNodePorts
 ) where
 
 import qualified DataflowBook.ADF.Dataflow.Id as Id

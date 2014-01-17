@@ -21,7 +21,7 @@ import Control.Concurrent
     This based on the Manchester Dataflow Architecture with tweeks
     that make it more useful as a software dataflow engine.
 
-    The engine itself is a very simple, dataflow pipline architecture.
+    The engine itself is a very simple, dataflow pipeline architecture.
     To differentiate between code to implement this engine and code
     to model a dataflow program, we will call the nodes used by the engine
     "components" and reserve the term, "nodes" for the dataflow model types.
